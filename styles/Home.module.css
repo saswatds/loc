@@ -3,22 +3,29 @@
   padding: 0 0.7rem;
   display: flex;
   flex-direction: column;
-  background-color: #000823;
   color: white;
+  background: linear-gradient(210deg, #4b6cb7 0%, #182848 100%);
 }
 
 .space {
   flex: 1;
 }
 
-.top {
+.top-container {
   height: 40px;
-  margin: 0 20px;
-  border: 1px solid #f5f5f569;
-  border-top: none;
-  position: relative;
+  padding: 0 20px;
 }
+
+.top {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background-color: #f5f5f518;
+  overflow: hidden;
+}
+
 .bottom {
   height: 50px;
   position: relative;
+  overflow: hidden;
 }
