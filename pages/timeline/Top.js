@@ -1,15 +1,17 @@
-export default function Top({styles}) {
-
+export default function Top({styles, mouseMove}) {
   const handleWheel = (e) => {
     console.log('scroll', e);
   }
 
   const handleMouseMove = (e) => {
     const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left + 1; //x position within the element.
-    const y = e.clientY - rect.top;  //y position within the element.
-    console.log("Left? : " + x + " ; Top? : " + y + ".");
-  }
+
+    // Note: Adding a 1px offset because for some reason the browser is acting weird
+    // Future: Some day in future the brower will fix it and it might break
+    const x = e.clientX - rect.left + 1;
+
+    mouseMove(x);
+  };
 
   return (
     <div
