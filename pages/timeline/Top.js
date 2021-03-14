@@ -1,4 +1,6 @@
-export default function Top({styles, mouseMove}) {
+import styles from '../../styles/Home.module.css';
+
+export default function Top({mouseMove}) {
   const handleWheel = (e) => {
     console.log('scroll', e);
   }

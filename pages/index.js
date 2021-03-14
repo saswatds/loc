@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import TimeTree from './core/TimeTree';
+
+import TimeTree from '../core/TimeTree';
+
 import Top from './timeline/Top';
-import { useState } from 'react';
 import Marker from './timeline/Marker';
 
 export default function Home() {
@@ -22,8 +24,8 @@ export default function Home() {
         {time.all()}
       </div>
       <div className={styles['top-container']}>
-        <Top styles={styles} mouseMove={(x) => setMarkerPos(x)} />
-        <Marker styles={styles} markerPos={markerPos}/>
+        <Top mouseMove={(x) => setMarkerPos(x)} />
+        <Marker markerPos={markerPos}/>
       </div>
       <div className={styles.bottom}></div>
     </div>
