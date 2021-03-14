@@ -7,10 +7,23 @@ import TimeTree from '../core/TimeTree';
 import Top from './timeline/Top';
 import Marker from './timeline/Marker';
 
-export default function Home() {
-  const time = new TimeTree();
 
+function randomDate(start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
+const time = new TimeTree();
+
+for (let i = 0; i < 100; i++) {
+  const d = randomDate(new Date(1980, 0, 1), new Date());
+  time.addEvent(d, `event-${d}`);
+}
+
+
+export default function Home() {
   const [markerPos, setMarkerPos] = useState(0)
+
+  console.log(time);
 
   return (
     <div className={styles.container}>
@@ -21,7 +34,7 @@ export default function Home() {
       </Head>
 
       <div className={styles.space}>
-        {time.all()}
+        {'All'}
       </div>
       <div className={styles['top-container']}>
         <Top mouseMove={(x) => setMarkerPos(x)} />

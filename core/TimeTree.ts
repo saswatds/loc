@@ -168,26 +168,47 @@ class LinkedDayNodes extends DateTimeBTree<Day> {
     }
 
     // It's in between first and last node then we need to traverse and link it
-    if(dFromStart === Ordering.GREATER && dFromEnd=== Ordering.LESSER) {
-      let point = this.dls.next; // Start with the next node of
+    if(dFromStart === Ordering.GREATER && dFromEnd === Ordering.LESSER) {
+      // Start with the first node
+      let pointer: Day | null = this.dls;
 
-      // Loop until point is found
-      while(point && Day.compare(d.id(),point.id()) === Ordering.LESSER) {
-        point = point?.next;
+      // Find until the next node is greater or equal
+    
+      // Loop until there is a pointer
+      while(pointer) {
+        // Get the next pointer
+        const next: Day | null = pointer.next;
+
+        if(!next) {
+          break;
+        }
+
+        // Check if the next node is greater than the d then time to breakout
+        // The next item is greater the current date hence we will have to
+        // place the current node in-between the current node and next node
+        if(Day.compare(next.id(), d.id()) === Ordering.GREATER){
+          break;
+        }
+
+        // If can next is null pointer will be set to null and it will break out
+        // of this loop
+        pointer = next;
       }
 
-      if(!point) {
-        throw new Error('No point found to index day');
+      // No pointer was found which should never happen
+      if(!pointer.next) {
+        
+        throw new Error('No pointer found to index day');
       }
 
-      // the d and point are same then bail as its already indexed
-      if(Day.compare(d.id(), point.id()) === Ordering.EQUAL) {
+      // the d and pointer are same then bail as its already indexed
+      if(Day.compare(d.id(), pointer.id()) === Ordering.EQUAL) {
         return;
       }
 
-      // Inject into the linked list
-      d.next = point.next;
-      point.next = d;
+      // Inject into the linked list between the pointer and it's next value
+      d.next = pointer.next;
+      pointer.next = d;
     }
   }
 }
