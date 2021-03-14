@@ -1,4 +1,12 @@
 import BTree from "sorted-btree";
+import { 
+  addDays, 
+  addMonths, 
+  addYears, 
+  differenceInDays, 
+  differenceInMonths, 
+  differenceInYears 
+} from "date-fns";
 
 export enum Ordering {
   LESSER,
@@ -230,7 +238,7 @@ export default class TimeTree {
     this.dates.index(dayNode);
   }
 
-  query(start: Date, end: Date, includeEnd: boolean = true) {
+  query(start: Date, end: Date, includeEnd: boolean = true): any[] {
     let startDay: Day | undefined = this.dates.findSameOrHigher(Day.fromDate(start));
     let endDay: Day | undefined = includeEnd ? 
       this.dates.findSameOrLower(Day.fromDate(end)) : 
@@ -241,5 +249,69 @@ export default class TimeTree {
 
   all() {
     return Day.traverse(this.dates.dls);
+  }
+
+  bucket(start: Date, end: Date, size: number) {
+    let years = differenceInYears(end, start);
+    // If the difference is year is greater than size of bucket we use year
+    // resolution
+    if(years > size) {
+      // Compute year range for each bucket, we ceil the range to nearest integer
+      // in order to no overshoot the bucket size
+      const range = Math.ceil(years / size);
+      const r = [];
+
+      for(let i = 0; i< size; i++) {
+        // Offset the start year by range
+        const s = addYears(start, i * range),
+          // Get the end by offseting from s
+          e = addYears(s, range);
+
+        r[i] = this.query(s, e, false).length;        
+      }
+
+      return r;
+    } 
+    
+    let months =  differenceInMonths(end, start);
+
+    // If the difference in months is greater than size we use month resolution
+    if (months > size) {
+
+       // Compute year range for each bucket, we ceil the range to nearest integer
+      // in order to no overshoot the bucket size
+      const range = Math.ceil(months / size);
+      const r = [];
+
+      for(let i = 0; i< size; i++) {
+        // Offset the start year by range
+        const s = addMonths(start, i * range),
+          // Get the end by offseting from s
+          e = addMonths(s, range);
+
+        r[i] = this.query(s, e, false).length;        
+      }
+
+      return r;
+    }
+    
+    // Else we will use day resolution by default
+    let days = differenceInDays(end, start);
+
+      // Compute year range for each bucket, we ceil the range to nearest integer
+      // in order to no overshoot the bucket size
+      const range = Math.ceil(days / size);
+      const r = [];
+
+      for(let i = 0; i< size; i++) {
+        // Offset the start year by range
+        const s = addDays(start, i * range),
+          // Get the end by offseting from s
+          e = addDays(s, range);
+
+        r[i] = this.query(s, e, false).length;
+      }
+
+      return r;
   }
 }

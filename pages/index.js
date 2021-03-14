@@ -15,15 +15,14 @@ function randomDate(start, end) {
 const time = new TimeTree();
 
 for (let i = 0; i < 100; i++) {
-  const d = randomDate(new Date(1980, 0, 1), new Date());
+  const d = randomDate(new Date(1980), new Date());
   time.addEvent(d, `event-${d}`);
 }
 
 
 export default function Home() {
-  const [markerPos, setMarkerPos] = useState(0)
-
-  console.log(time);
+  const [markerPos, setMarkerPos] = useState(0);
+  const bucket = time.bucket(new Date(1980), new Date(), 20);
 
   return (
     <div className={styles.container}>
@@ -34,7 +33,7 @@ export default function Home() {
       </Head>
 
       <div className={styles.space}>
-        {'All'}
+        [{bucket.toString()}]
       </div>
       <div className={styles['top-container']}>
         <Top mouseMove={(x) => setMarkerPos(x)} />
